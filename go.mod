@@ -1,4 +1,4 @@
-module saw
+module github.com/imishinist/saw
 
 go 1.23
 
