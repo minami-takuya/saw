@@ -16,15 +16,16 @@ import (
 )
 
 type SendMessageOpts struct {
-	QueueURL string
-
-	Input string
+	QueueURL    string
+	Input       string
+	MessageSize int
 }
 
 var (
 	sendMessageOpts = &SendMessageOpts{
-		QueueURL: "",
-		Input:    "",
+		QueueURL:    "",
+		Input:       "",
+		MessageSize: 10,
 	}
 )
 
@@ -57,7 +58,7 @@ var sendMessageCmd = &cobra.Command{
 		client := sqs.NewFromConfig(cfg)
 
 		lines := internal.ReadByLine(in)
-		chunkedLines := internal.ChunkCh(lines, 10)
+		chunkedLines := internal.ChunkCh(lines, sendMessageOpts.MessageSize)
 
 		wg := new(sync.WaitGroup)
 		for i := 0; i < concurrency; i++ {
@@ -66,7 +67,7 @@ var sendMessageCmd = &cobra.Command{
 				defer wg.Done()
 
 				for chunk := range chunkedLines {
-					entries := make([]types.SendMessageBatchRequestEntry, 0, 10)
+					entries := make([]types.SendMessageBatchRequestEntry, 0, sendMessageOpts.MessageSize)
 					for i, line := range chunk {
 						id := strconv.Itoa(i)
 						entries = append(entries, types.SendMessageBatchRequestEntry{
@@ -79,6 +80,7 @@ var sendMessageCmd = &cobra.Command{
 						QueueUrl: &sendMessageOpts.QueueURL,
 						Entries:  entries,
 					})
+
 					if err != nil {
 						slog.Error("failed to send message", slog.Any("error", err))
 					}
@@ -96,4 +98,5 @@ func init() {
 
 	sendMessageCmd.Flags().StringVarP(&sendMessageOpts.QueueURL, "queue-url", "q", sendMessageOpts.QueueURL, "the url of the sqs queue")
 	sendMessageCmd.Flags().StringVarP(&sendMessageOpts.Input, "input", "i", sendMessageOpts.Input, "the message to send")
+	sendMessageCmd.Flags().IntVarP(&sendMessageOpts.MessageSize, "message-size", "m", sendMessageOpts.MessageSize, "the size of the message to send")
 }
