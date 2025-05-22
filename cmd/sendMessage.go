@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/spf13/cobra"
 
-	"github.com/minamitakuya/saw/internal"
+	"github.com/minami-takuya/saw/internal"
 )
 
 type SendMessageOpts struct {

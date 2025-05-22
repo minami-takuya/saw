@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/thediveo/enumflag/v2"
 
-	"github.com/minamitakuya/saw/internal"
+	"github.com/minami-takuya/saw/internal"
 )
 
 type ListObjectsWriter interface {
