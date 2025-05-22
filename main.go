@@ -1,6 +1,6 @@
 package main
 
-import "github.com/minamitakuya/saw/cmd"
+import "github.com/minami-takuya/saw/cmd"
 
 func main() {
 	cmd.Execute()
