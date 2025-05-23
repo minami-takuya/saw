@@ -6,7 +6,7 @@ import (
 )
 
 func ReadByLine(in io.Reader) <-chan string {
-	ch := make(chan string)
+	ch := make(chan string, 100)
 
 	go func() {
 		defer close(ch)
