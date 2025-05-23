@@ -1,7 +1,7 @@
 package internal
 
 func ChunkCh[T any](in <-chan T, size int) <-chan []T {
-	out := make(chan []T)
+	out := make(chan []T, 100)
 
 	go func() {
 		defer close(out)
